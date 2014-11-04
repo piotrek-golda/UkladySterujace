@@ -38,13 +38,13 @@
 	 LOOP:
  
 		 ; przepisuje wartosc z (LEN-Z)-tej komorki tab1 do rejestru arytmetycznego i przesuwam sie komorke dalej
-		 LD R16, Y+
+		 LD R16, X+
 		 ; z (LEN-Z)-tej komorki tab2 do kolejnego rejestru arytmetycznego
-		 LD R17, X
+		 LD R17, Y
 		 ; dodaje obie liczby i carry (przy ew przepelnieniu ustawiam carry = 1)
 		 ADC R17, R16
 		 ; i wynik zapisuje do komorki (LEN-Z)-tej tab2, przesuwajac sie dalej
-		 ST X+, R17
+		 ST Y+, R17
 
 		 ;if - zeby zachowac wartosc flagi carry
 		 BRCS IF
