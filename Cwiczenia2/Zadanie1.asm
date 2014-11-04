@@ -20,38 +20,48 @@
  LDI ZH, HIGH(LEN)
 
  ; ustawiam wartosc pomocnicza zero do jednego z rejestrow
- LDI R19, 0
+ 	 LDI R19, 0
  
- ; sprawdzam, czy Z (dlugosc tablicy) nie jest zerem
- CP R30, R19
- BRNE STARTLOOP
- CP R31, R19
- BRNE STARTLOOP
+	 ; sprawdzam, czy Z (dlugosc tablicy) nie jest zerem
+	 CP R30, R19
+	 BRNE STARTLOOP
+	 CP R31, R19
+	 BRNE STARTLOOP
 
- ; jezeli zero, to koncze
- jmp END
+	 ; jezeli zero, to koncze
+	 jmp END
 
- ; wpp startuje petle
+	 STARTLOOP:
 
- STARTLOOP:
+	 CLC ; clear carry - gdyby bylo ustawione, pierwsza liczba wyniku bylaby o 1 za duza
 
- CLC ; clear carry - gdyby bylo ustawione, pierwsza liczba wyniku bylaby o 1 za duza
-
- LOOP:
+	 LOOP:
  
- ; przepisuje wartosc z (LEN-Z)-tej komorki tab1 do rejestru arytmetycznego i przesuwam sie komorke dalej
- LD R16, X+
- ; z (LEN-Z)-tej komorki tab2 do kolejnego rejestru arytmetycznego
- LD R17, Y
- ; dodaje obie liczby i carry (przy ew przepelnieniu ustawiam carry = 1)
- ADC R17, R16
- ; i wynik zapisuje do komorki (LEN-Z)-tej tab2, przesuwajac sie dalej
- ST Y+, R17
+		 ; przepisuje wartosc z (LEN-Z)-tej komorki tab1 do rejestru arytmetycznego i przesuwam sie komorke dalej
+		 LD R16, Y+
+		 ; z (LEN-Z)-tej komorki tab2 do kolejnego rejestru arytmetycznego
+		 LD R17, X
+		 ; dodaje obie liczby i carry (przy ew przepelnieniu ustawiam carry = 1)
+		 ADC R17, R16
+		 ; i wynik zapisuje do komorki (LEN-Z)-tej tab2, przesuwajac sie dalej
+		 ST X+, R17
 
- ; zmniejszam licznik o 1
- SBIW R30, 1
- ; i jezeli zero flag = 0 skacze na poczatek petli
- BRNE LOOP
+		 ;if - zeby zachowac wartosc flagi carry
+		 BRCS IF
+			; zmniejszam licznik o 1
+			SBIW R30, 1
+			; przywracam wartosc carry
+			CLC
+		 JMP ELSE
+		 IF:
+			; zmniejszam licznik o 1
+			SBIW R30, 1
+			; przywracam wartosc carry
+			SEC
+		 ELSE:
+
+		 ; i jezeli zero flag = 0 skacze na poczatek petli
+	 BRNE LOOP
 
  ; petla konca
  END: JMP END

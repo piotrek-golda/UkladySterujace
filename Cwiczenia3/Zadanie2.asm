@@ -34,14 +34,10 @@
 
  ;procedura dodaj
  DODAJ:
-	
-	;wrzucam na stos rejestry modyfikowane w 
+	  ; ustawiam wartosc pomocnicza zero do jednego z rejestrow
 	  PUSH R19
 	  PUSH R17
 	  PUSH R16
-
-	  //KOD Z POPRZEDNIEGO ZADANIA
-	 ; ustawiam wartosc pomocnicza zero do jednego z rejestrow
 	 LDI R19, 0
  
 	 ; sprawdzam, czy Z (dlugosc tablicy) nie jest zerem
@@ -68,20 +64,27 @@
 		 ; i wynik zapisuje do komorki (LEN-Z)-tej tab2, przesuwajac sie dalej
 		 ST X+, R17
 
-		 ; zmniejszam licznik o 1
-		 SBIW R30, 1
+		 ;if - zeby zachowac wartosc flagi carry
+		 BRCS IF
+			; zmniejszam licznik o 1
+			SBIW R30, 1
+			; przywracam wartosc carry
+			CLC
+		 JMP ELSE
+		 IF:
+			; zmniejszam licznik o 1
+			SBIW R30, 1
+			; przywracam wartosc carry
+			SEC
+		 ELSE:
+
 		 ; i jezeli zero flag = 0 skacze na poczatek petli
 	 BRNE LOOP
 
 	 END_DODAJ:
-	 //KONIEC KODU Z POPRZEDNIEGO ZADANIA
-
-	 ;zdejuje ze stosu poprzednie wartosci modyfikowanych rejestrow
 	 POP R16
 	 POP R17
 	 POP R19
-
-	 ;koniec procedury dodaj
  RET
 
 

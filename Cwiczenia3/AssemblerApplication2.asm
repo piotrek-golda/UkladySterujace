@@ -61,8 +61,20 @@
 		 ; i wynik zapisuje do komorki (LEN-Z)-tej tab2, przesuwajac sie dalej
 		 ST X+, R17
 
-		 ; zmniejszam licznik o 1
-		 SBIW R30, 1
+		 ;if - zeby zachowac wartosc flagi carry
+		 BRCS IF
+			; zmniejszam licznik o 1
+			SBIW R30, 1
+			; przywracam wartosc carry
+			CLC
+		 JMP ELSE
+		 IF:
+			; zmniejszam licznik o 1
+			SBIW R30, 1
+			; przywracam wartosc carry
+			SEC
+		 ELSE:
+
 		 ; i jezeli zero flag = 0 skacze na poczatek petli
 	 BRNE LOOP
 
@@ -95,7 +107,7 @@
 
  .DSEG // segment danych
 
- .EQU LEN = 1 // dlugosc tablic
+ .EQU LEN = 2 // dlugosc tablic
 
  // deklaracja tablic
  tab1: .BYTE LEN
